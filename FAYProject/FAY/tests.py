@@ -12,13 +12,14 @@ class RegisterTest(APITestCase):
         }
 
         response = self.client.post(
-            "/auth/user/register/",
+            "/api/register/",
             data,
             format="json"
         )
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["username"], "testuser")
+        self.assertIsNotNone(response.data["refresh_token"])
+        self.assertIsNotNone(response.data["jwt_token"])
 
         user = User.objects.get(username="testuser")
         self.assertEqual(user.profile.role, "USER")
