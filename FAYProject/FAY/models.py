@@ -3,8 +3,8 @@ from django.contrib.auth.models import User
 
 class Profile(models.Model):
     ROLE_CHOICES = (
-        ('USER', 'Utilisateur'),
-        ('CREATOR', 'Créateur'),
+        ('USER', 'user'),
+        ('CREATOR', 'creator'),
     )
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)

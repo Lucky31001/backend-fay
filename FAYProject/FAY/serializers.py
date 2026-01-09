@@ -6,7 +6,7 @@ class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField()
     email = serializers.EmailField(required=False)
     password = serializers.CharField(write_only=True)
-    role = serializers.ChoiceField(choices=Profile.ROLE_CHOICES)
+    role = serializers.ChoiceField(choices=Profile.ROLE_CHOICES, default='USER')
 
     def create(self, validated_data):
         role = validated_data.pop("role")
