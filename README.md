@@ -4,7 +4,7 @@
 
 ```bash
 	python -m venv .venv
-	source .venv/bin/activate
+	source .venv/bin/activate OR .venv\Scripts\Activate.ps1
 	pip install -r requirements.txt
 	django-admin --version	
 ```
