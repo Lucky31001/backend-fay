@@ -4,6 +4,10 @@ MANAGE_PY := FAYProject/manage.py
 
 .PHONY: run start-db wait-db migrate start-app down logs
 
+install:
+	@echo "Installing dependencies..."
+	pip install -r requirements.txt
+
 # High-level target: start DB, wait, migrate, start web (background)
 run: start-db migrate start-app
 	@echo "Application started (logs: $(LOG))"
