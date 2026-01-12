@@ -18,7 +18,7 @@ def register_view(request):
     role = request.data.get('role', 'USER')
 
     if User.objects.filter(username=username).exists():
-        return Response({'error': 'Utilisateur déjà existant'}, status=400)
+        return Response({'error': 'Utilisateur déjà existant'}, status=status.HTTP_409_CONFLICT)
 
     user = User.objects.create_user(username=username, email=email, password=password)
 

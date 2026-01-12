@@ -41,3 +41,7 @@ start-app:
 
 down:
 	$(DOCKER) down -v --remove-orphans
+
+test:
+	@echo "Running tests..."
+	$(PY) $(MANAGE_PY) test

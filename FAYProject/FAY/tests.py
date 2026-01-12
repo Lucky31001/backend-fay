@@ -19,7 +19,7 @@ class RegisterTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsNotNone(response.data["refresh_token"])
-        self.assertIsNotNone(response.data["jwt_token"])
+        self.assertIsNotNone(response.data["access_token"])
 
         user = User.objects.get(username="testuser")
         self.assertEqual(user.profile.role, "USER")
