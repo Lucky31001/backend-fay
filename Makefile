@@ -1,6 +1,6 @@
 DOCKER := docker compose
 PY := python
-MANAGE_PY := FAYProject/manage.py
+MANAGE_PY := .\FAYProject\manage.py
 
 .PHONY: run start-db wait-db migrate start-app down logs
 
@@ -22,7 +22,7 @@ admin:
 
 migrate:
 	@echo "Waiting for database to be ready..."
-	sleep 10
+	timeout /t 10 || true
 	@echo "Applying migrations..."
 	$(PY) $(MANAGE_PY) migrate
 
