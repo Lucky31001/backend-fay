@@ -45,3 +45,8 @@ down:
 test:
 	@echo "Running tests..."
 	$(PY) $(MANAGE_PY) test
+
+prettier:
+	black .
+	isort .
+	ruff check . --fix

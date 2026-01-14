@@ -10,25 +10,61 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('FAY', '0002_alter_profile_role'),
+        ("FAY", "0002_alter_profile_role"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField(max_length=255)),
-                ('date', models.DateTimeField(auto_now_add=True)),
-                ('location', models.CharField(max_length=255)),
-                ('price', models.FloatField(default=0.0, validators=[django.core.validators.MinValueValidator(0.0)])),
-                ('link', models.CharField(max_length=255)),
-                ('description', models.CharField(max_length=255)),
-                ('event_type', models.CharField(max_length=255)),
-                ('note', models.FloatField(default=0.0, validators=[django.core.validators.MinValueValidator(0.0), django.core.validators.MaxValueValidator(5.0)])),
-                ('capacity', models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)])),
-                ('creator', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='events', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("name", models.CharField(max_length=255)),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                ("location", models.CharField(max_length=255)),
+                (
+                    "price",
+                    models.FloatField(
+                        default=0.0,
+                        validators=[django.core.validators.MinValueValidator(0.0)],
+                    ),
+                ),
+                ("link", models.CharField(max_length=255)),
+                ("description", models.CharField(max_length=255)),
+                ("event_type", models.CharField(max_length=255)),
+                (
+                    "note",
+                    models.FloatField(
+                        default=0.0,
+                        validators=[
+                            django.core.validators.MinValueValidator(0.0),
+                            django.core.validators.MaxValueValidator(5.0),
+                        ],
+                    ),
+                ),
+                (
+                    "capacity",
+                    models.IntegerField(
+                        default=0,
+                        validators=[django.core.validators.MinValueValidator(0)],
+                    ),
+                ),
+                (
+                    "creator",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="events",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

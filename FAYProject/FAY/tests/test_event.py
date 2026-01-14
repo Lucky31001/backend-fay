@@ -1,18 +1,15 @@
 from django.contrib.auth.models import User
-from rest_framework.test import APITestCase
-from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
-
 from FAY.models.model_event import Event
+from rest_framework import status
+from rest_framework.test import APITestCase
+from rest_framework_simplejwt.tokens import RefreshToken
 
 
 class EventTest(APITestCase):
 
     def setUp(self):
         self.user = User.objects.create_user(
-            username="creatoruser",
-            email="test@test.test",
-            password="password123"
+            username="creatoruser", email="test@test.test", password="password123"
         )
         self.user.profile.role = "CREATOR"
         self.user.profile.save()
