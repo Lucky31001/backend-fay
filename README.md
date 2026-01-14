@@ -9,7 +9,7 @@
 	django-admin --version	
 ```
 
-## Config a SuperUltraBigUser for /admin/ ( CD dans le dossier FAYProject)
+## Config a SuperUltraBigUser for /admin/
 
 ```bash
 	make admin
