@@ -8,17 +8,16 @@
 	make install
 	django-admin --version	
 ```
+## Run the server
+
+```bash
+    make run
+```
 
 ## Config a SuperUltraBigUser for /admin/
 
 ```bash
 	make admin
-```
-
-## Run the server
-
-```bash
-    make run
 ```
 
 ## Config DB
