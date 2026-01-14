@@ -2,7 +2,7 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth.models import User
 
-class RegisterTest(APITestCase):
+class AuthTest(APITestCase):
 
     def test_register_user(self):
         data = {
@@ -23,3 +23,56 @@ class RegisterTest(APITestCase):
 
         user = User.objects.get(username="testuser")
         self.assertEqual(user.profile.role, "USER")
+
+    def test_create_event(self):
+        data = {
+            "name" : "soirée déguisées no limit",
+            "location" : "Paris",
+            "date" : "2019-09-25",
+            "price" : 35,
+            "creator": User,
+            "link" : "https://fr.wikipedia.org/wiki/Moussa_Sanogo_(homme_politique)",
+            "description": "Un super event",
+            "type" : "Jazz",
+            "note": 5.0,
+            "capacity": 120,
+        }
+
+        response = self.client.post(
+            "/api/event",
+            data,
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(response.data.event_name, data.name)
+
+
+class EventTest(APITestCase):
+    
+    def test_create_event(self):
+        data = {
+            "name" : "soirée déguisées no limit",
+            "location" : "Paris",
+            "date" : 12/09/2022,
+            "price" : 35,
+            "creator": User,
+            "link" : "https://fr.wikipedia.org/wiki/Moussa_Sanogo_(homme_politique)",
+            "description": "Un super event",
+            "type" : "Jazz",
+            "note": 5.0,
+            "capacity": 120,
+        }
+
+        response = self.client.post(
+            "/api/event",
+            data,
+            format="json"
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.assertEqual(response.data.event_name, data.name)
+
+        
