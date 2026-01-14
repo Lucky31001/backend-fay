@@ -39,7 +39,7 @@ jobs:
 
     - name: Run migrations check
       run: |
-        python manage.py makemigrations --check --dry-run
+        python FAYProject/manage.py makemigrations --check --dry-run
 
     - name: Run tests
       env:
