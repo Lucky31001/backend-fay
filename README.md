@@ -5,21 +5,20 @@
 ```bash
 	python -m venv .venv
 	source .venv/bin/activate OR .venv\Scripts\Activate.ps1
-	pip install -r requirements.txt
+	make install
 	django-admin --version	
 ```
 
 ## Config a SuperUltraBigUser for /admin/ ( CD dans le dossier FAYProject)
 
 ```bash
-    python manage.py createsuperuser
+	make admin
 ```
 
 ## Run the server
 
 ```bash
-    cd FAYProject
-    python manage.py runserver
+    make run
 ```
 
 ## Config DB
