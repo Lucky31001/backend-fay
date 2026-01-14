@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Profile
+from FAY.models.model_profile import Profile
+
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
