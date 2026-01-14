@@ -18,7 +18,7 @@ def register_view(request):
     role = request.data.get('role', 'USER')
 
     if User.objects.filter(username=username).exists():
-        return Response({'error': 'Utilisateur déjà existant'}, status=400)
+        return Response({'error': 'Utilisateur déjà existant'}, status=status.HTTP_409_CONFLICT)
 
     user = User.objects.create_user(username=username, email=email, password=password)
 
@@ -33,10 +33,11 @@ def register_view(request):
 
 @api_view(['POST'])
 def login_view(request):
-    email = request.data.get('email')
+    username = request.data.get('username')
     password = request.data.get('password')
 
-    user = authenticate(email=email, password=password)
+    user = authenticate(username=username, password=password)
+    print(user)
     if user:
         refresh = RefreshToken.for_user(user)
         return Response({

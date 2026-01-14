@@ -16,6 +16,10 @@ start-db:
 	@echo "Starting postgres..."
 	$(DOCKER) up -d
 
+start-app:
+	@echo "Starting Django dev server..."
+	$(PY) $(MANAGE_PY) runserver
+
 admin:
 	@echo "Creating admin user..."
 	$(PY) $(MANAGE_PY) createsuperuser
@@ -37,3 +41,7 @@ start-app:
 
 down:
 	$(DOCKER) down -v --remove-orphans
+
+test:
+	@echo "Running tests..."
+	$(PY) $(MANAGE_PY) test
