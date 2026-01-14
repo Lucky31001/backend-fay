@@ -16,12 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from .views import register_view, login_view, protected_view
+
+from FAY.views.view_event import EventView
 from rest_framework_simplejwt.views import TokenRefreshView
+
+from FAY.views.view_login import LoginView
+from FAY.views.view_register import RegisterView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/register/', register_view, name='register'),
-    path('api/login/', login_view, name='login'),
+    path('api/register/', RegisterView.as_view(), name='register'),
+    path('api/login/', LoginView.as_view(), name='login'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/event/', EventView.as_view(), name='create_event'),
 ]
