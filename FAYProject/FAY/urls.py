@@ -24,4 +24,5 @@ urlpatterns = [
     path('api/register/', register_view, name='register'),
     path('api/login/', login_view, name='login'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/event/')
 ]
