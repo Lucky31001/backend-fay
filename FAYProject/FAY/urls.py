@@ -27,5 +27,5 @@ urlpatterns = [
     path("api/register/", RegisterView.as_view(), name="register"),
     path("api/login/", LoginView.as_view(), name="login"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("api/event/", EventView.as_view(), name="create_event"),
+    path("api/event/", EventView.as_view(), name="event"),
 ]

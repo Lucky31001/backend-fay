@@ -9,6 +9,22 @@ class EventView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        events = Event.objects.all()
+        data = []
+        for event in events:
+            data.append(
+                {
+                    "id": event.id,
+                    "name": event.name,
+                    "location": event.location,
+                    "price": event.price,
+                    "link": event.link,
+                    "description": event.description,
+                    "event_type": event.event_type,
+                    "note": event.note,
+                    "capacity": event.capacity,
+                }
+            )
         return Response({"message": "GET reçu"})
 
     def post(self, request):
