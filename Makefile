@@ -17,12 +17,15 @@ start-db:
 	$(DOCKER) up -d
 
 start-app:
-	@echo "Starting Django dev server..."
-	$(PY) $(MANAGE_PY) runserver
+	@echo "Starting Django dev server (listening on 0.0.0.0:8000)..."
+	@$(PY) $(MANAGE_PY) runserver 0.0.0.0:8000
 
 admin:
 	@echo "Creating admin user..."
-	$(PY) $(MANAGE_PY) createsuperuser
+	DJANGO_SUPERUSER_USERNAME=test \
+	DJANGO_SUPERUSER_EMAIL=test@test.test \
+	DJANGO_SUPERUSER_PASSWORD=test \
+	$(PY) $(MANAGE_PY) createsuperuser --noinput
 
 migrate:
 	@echo "Waiting for database to be ready..."
@@ -34,10 +37,6 @@ migration:
 	@echo "Creating new migration..."
 	$(PY) $(MANAGE_PY) makemigrations
 	$(PY) $(MANAGE_PY) migrate
-
-start-app:
-	@echo "Starting Django dev server (background)..."
-	@$(PY) FAYProject/manage.py runserver
 
 down:
 	$(DOCKER) down -v --remove-orphans
