@@ -7,4 +7,7 @@ class Config(AppConfig):
     label = "FAY"
 
     def ready(self):
-        pass
+        try:
+            from . import signals  # noqa: F401
+        except Exception:
+            pass

@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  ci:
     runs-on: ubuntu-latest
 
     services:
@@ -37,15 +37,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Security audit (pip-audit)
+      run: |
+        pip install pip-audit
+        pip-audit
+
     - name: Run migrations check
       run: |
-        python manage.py makemigrations --check --dry-run
+        python FAYProject/manage.py makemigrations --check --dry-run
 
     - name: Run tests
       env:
         DATABASE_URL: postgres://test:test@localhost:5432/test
       run: |
-        python manage.py test
+        python FAYProject/manage.py test
 
     - name: Django formatting check
       run: |
