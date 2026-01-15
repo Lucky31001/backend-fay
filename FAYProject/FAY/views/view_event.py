@@ -9,7 +9,23 @@ class EventView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response({"message": "GET reçu"})
+        events = Event.objects.all()
+        data = []
+        for event in events:
+            data.append(
+                {
+                    "id": event.id,
+                    "name": event.name,
+                    "location": event.location,
+                    "price": event.price,
+                    "link": event.link,
+                    "description": event.description,
+                    "event_type": event.event_type,
+                    "note": event.note,
+                    "capacity": event.capacity,
+                }
+            )
+        return Response(data)
 
     def post(self, request):
         name = request.data.get("name")
@@ -40,6 +56,17 @@ class EventView(APIView):
         )
 
         return Response(
-            {"message": "Event créé", "event_id": event.id, "event_name": event.name},
+            {
+                "message": "Event créé",
+                "event_id": event.id,
+                "event_name": event.name,
+                "event_location": event.location,
+                "event_price": event.price,
+                "event_link": event.link,
+                "event_description": event.description,
+                "event_type": event.event_type,
+                "event_note": event.note,
+                "event_capacity": event.capacity,
+            },
             status=status.HTTP_201_CREATED,
         )
