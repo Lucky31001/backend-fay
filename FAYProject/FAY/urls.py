@@ -28,4 +28,5 @@ urlpatterns = [
     path("api/login/", LoginView.as_view(), name="login"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/event/", EventView.as_view(), name="event"),
+    path("api/event/create/", EventView.as_view(), name="event_create"),
 ]
