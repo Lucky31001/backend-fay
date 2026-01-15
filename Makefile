@@ -18,7 +18,7 @@ start-db:
 
 start-app:
 	@echo "Starting Django dev server..."
-	$(PY) $(MANAGE_PY) runserver
+	@$(PY) $(MANAGE_PY) runserver 0.0.0.0:8000
 
 admin:
 	@echo "Creating admin user..."
