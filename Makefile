@@ -1,6 +1,6 @@
 DOCKER := docker compose
 PY := python
-MANAGE_PY := .\FAYProject\manage.py
+MANAGE_PY := FAYProject/manage.py
 
 .PHONY: run start-db wait-db migrate start-app down logs
 
@@ -9,16 +9,11 @@ install:
 	pip install -r requirements.txt
 
 # High-level target: start DB, wait, migrate, start web (background)
-run: start-db migrate start-app
-	@echo "Application started (logs: $(LOG))"
-
-start-db:
-	@echo "Starting postgres..."
+run:
 	$(DOCKER) up -d
-
-start-app:
-	@echo "Starting Django dev server (listening on 0.0.0.0:8000)..."
+	$(PY) $(MANAGE_PY) migrate
 	@$(PY) $(MANAGE_PY) runserver 0.0.0.0:8000
+	@echo "Application started (logs: $(LOG))"
 
 admin:
 	@echo "Creating admin user..."
@@ -29,7 +24,7 @@ admin:
 
 migrate:
 	@echo "Waiting for database to be ready..."
-	timeout /t 10 || true
+	@sleep 5
 	@echo "Applying migrations..."
 	$(PY) $(MANAGE_PY) migrate
 
