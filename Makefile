@@ -1,45 +1,54 @@
-DOCKER := docker compose
-PY := python
-MANAGE_PY := FAYProject/manage.py
+DOCKER ?= docker compose
 
-.PHONY: run start-db wait-db migrate start-app down logs
+ifeq ($(OS),Windows_NT)
+    PY ?= py -3
+else
+    PY ?= python3
+endif
+
+PIP ?= $(PY) -m pip
+MANAGE_PY := FAYProject/manage.py
+DJANGO := $(PY) $(MANAGE_PY)
+
+DJANGO_SUPERUSER_USERNAME ?= test
+DJANGO_SUPERUSER_EMAIL ?= test@test.test
+DJANGO_SUPERUSER_PASSWORD ?= test
+
+export DJANGO_SUPERUSER_USERNAME
+export DJANGO_SUPERUSER_EMAIL
+export DJANGO_SUPERUSER_PASSWORD
+
+.PHONY: install run wait-db migrate migration down logs test admin prettier
 
 install:
-	@echo "Installing dependencies..."
-	pip install -r requirements.txt
+	$(PIP) install -r requirements.txt
+
+wait-db:
+	$(PY) -c "import time; time.sleep(5)"
 
 run:
 	$(DOCKER) up -d
-	$(PY) $(MANAGE_PY) migrate
-	@$(PY) $(MANAGE_PY) runserver 0.0.0.0:8000
-	@echo "Application started (logs: $(LOG))"
+	$(DJANGO) migrate
+	$(DJANGO) runserver 0.0.0.0:8000
 
 admin:
-	@echo "Creating admin user..."
-	DJANGO_SUPERUSER_USERNAME=test \
-	DJANGO_SUPERUSER_EMAIL=test@test.test \
-	DJANGO_SUPERUSER_PASSWORD=test \
-	$(PY) $(MANAGE_PY) createsuperuser --noinput
+	$(DJANGO) createsuperuser --noinput
 
 migrate:
-	@echo "Waiting for database to be ready..."
-	@sleep 5
-	@echo "Applying migrations..."
-	$(PY) $(MANAGE_PY) migrate
+	@$(MAKE) wait-db
+	$(DJANGO) migrate
 
 migration:
-	@echo "Creating new migration..."
-	$(PY) $(MANAGE_PY) makemigrations
-	$(PY) $(MANAGE_PY) migrate
+	$(DJANGO) makemigrations
+	$(DJANGO) migrate
 
 down:
 	$(DOCKER) down -v --remove-orphans
 
 test:
-	@echo "Running tests..."
-	$(PY) $(MANAGE_PY) test
+	$(DJANGO) test
 
 prettier:
-	black .
-	isort .
-	ruff check . --fix
+	$(PY) -m black .
+	$(PY) -m isort .
+	$(PY) -m ruff check . --fix

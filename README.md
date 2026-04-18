@@ -11,6 +11,7 @@ Backend Django du projet FAY. Contient les commandes Make utiles pour démarrer 
 - Python 3.10+ (virtualenv recommandé)
 - pip
 - PostgreSQL (localement ou via docker-compose)
+- GNU Make (sur Windows: Git Bash, MSYS2 ou WSL recommandé)
 - (optionnel) expect si vous utilisez la cible `admin-eof` pour préremplir `createsuperuser`
 
 ## Installation rapide
@@ -22,6 +23,13 @@ source .venv/bin/activate
 
 # installer les dépendances
 make install
+```
+
+Pour adapter les commandes selon votre OS/outillage, vous pouvez surcharger les variables du Makefile:
+
+```bash
+# Exemple Windows avec docker-compose legacy
+make DOCKER=docker-compose PY="py -3" run
 ```
 
 ## Configuration de la base de données

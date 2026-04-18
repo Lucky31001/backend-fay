@@ -4,7 +4,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 def build_tokens_for_user(user):
     """Build refresh and access tokens embedding the user's role claim."""
-    role = Profile.objects.filter(user=user).values_list("role", flat=True).first() or "USER"
+    role = (
+        Profile.objects.filter(user=user).values_list("role", flat=True).first()
+        or "USER"
+    )
 
     refresh = RefreshToken.for_user(user)
     refresh["role"] = role
@@ -16,5 +19,3 @@ def build_tokens_for_user(user):
         "refresh_token": str(refresh),
         "access_token": str(access),
     }
-
-

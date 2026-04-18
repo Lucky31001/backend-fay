@@ -42,7 +42,7 @@ class EventView(APIView):
                 {"error": "Le nom et le lieu sont obligatoires"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-        
+
         print("user is creator :", request.user)
 
         event = Event.objects.create(
