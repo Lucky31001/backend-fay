@@ -8,7 +8,6 @@ install:
 	@echo "Installing dependencies..."
 	pip install -r requirements.txt
 
-# High-level target: start DB, wait, migrate, start web (background)
 run:
 	$(DOCKER) up -d
 	$(PY) $(MANAGE_PY) migrate
