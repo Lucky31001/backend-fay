@@ -1,5 +1,6 @@
 from django.contrib import admin
 from FAY.models.model_event import Event
+from FAY.models.model_event_type import EventType
 from FAY.models.model_profile import Profile
 
 
@@ -16,10 +17,21 @@ class EventAdmin(admin.ModelAdmin):
         "date",
         "location",
         "price",
-        "event_type",
+        "display_event_types",
         "note",
         "capacity",
         "creator",
     )
-    search_fields = ("name", "location", "event_type", "creator__username")
-    list_filter = ("event_type", "date", "creator")
+    search_fields = ("name", "location", "event_types__name", "creator__username")
+    list_filter = ("event_types", "date", "creator")
+    filter_horizontal = ("event_types",)
+
+    @admin.display(description="Types")
+    def display_event_types(self, obj):
+        return ", ".join(obj.event_types.values_list("name", flat=True)) or "-"
+
+
+@admin.register(EventType)
+class EventTypeAdmin(admin.ModelAdmin):
+    list_display = ("name",)
+    search_fields = ("name",)

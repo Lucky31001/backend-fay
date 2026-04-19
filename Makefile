@@ -28,6 +28,7 @@ wait-db:
 
 run:
 	$(DOCKER) up -d
+	@$(MAKE) wait-db
 	$(DJANGO) migrate
 	$(DJANGO) runserver 0.0.0.0:8000
 
