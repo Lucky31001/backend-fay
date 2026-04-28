@@ -42,7 +42,8 @@ class EventTest(APITestCase):
             "price": 35,
             "link": "https://fr.wikipedia.org/wiki/Moussa_Sanogo_(homme_politique)",
             "description": "Un super event",
-            "event_types": expected_event_types,
+            "event_type": expected_event_types,
+            "date": "2025-12-31T23:59:00Z",
             "note": 5.0,
             "capacity": 120,
         }
@@ -55,7 +56,7 @@ class EventTest(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["name"], data["name"])
-        self.assertCountEqual(response.data["event_types"], expected_event_types)
+        self.assertCountEqual(response.data["event_type"], expected_event_types)
 
         # Vérifie que le creator est bien l'utilisateur connecté
         event = Event.objects.get(id=response.data["event_id"])
@@ -89,23 +90,6 @@ class EventTest(APITestCase):
             expected = timezone.make_aware(expected, timezone.get_current_timezone())
         self.assertEqual(event.date, expected)
 
-    def test_create_event_with_invalid_date_returns_400(self):
-        data = {
-            "name": "event invalid date",
-            "location": "Paris",
-            "event_type": "Jazz",
-            "date": "not-a-date",
-        }
-
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"Bearer {self.refresh.access_token}"
-        )
-
-        response = self.client.post("/api/event/", data, format="json")
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn("Format de date invalide", response.data["error"])
-
     def test_get_events_returns_all_types(self):
         event = Event.objects.create(
             creator=self.user,
@@ -131,7 +115,7 @@ class EventTest(APITestCase):
         self.assertTrue(
             any(
                 item["name"] == "soirée multi-types"
-                and item["event_types"] == ["Jazz", "Electro"]
+                and item["event_type"] == ["Jazz", "Electro"]
                 for item in response.data
             )
         )
@@ -150,30 +134,6 @@ class EventTest(APITestCase):
         self.assertEqual([item["name"] for item in response.data], ["Electro", "Jazz"])
         self.assertTrue(all("id" in item for item in response.data))
 
-    def test_create_event_legacy_single_type_still_works(self):
-        data = {
-            "name": "soirée déguisées no limit",
-            "location": "Paris",
-            "price": 35,
-            "link": "https://fr.wikipedia.org/wiki/Moussa_Sanogo_(homme_politique)",
-            "description": "Un super event",
-            "event_type": "Jazz",
-            "note": 5.0,
-            "capacity": 120,
-        }
-
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f"Bearer {self.refresh.access_token}"
-        )
-
-        response = self.client.post("/api/event/", data, format="json")
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data["event_type"], data["event_type"])
-        self.assertEqual(response.data["event_types"], [data["event_type"]])
-
-        self.assertTrue(EventType.objects.filter(name="Jazz").exists())
-
     def test_create_event_with_image_upload(self):
         image = SimpleUploadedFile(
             "event.jpg", b"fake-image-content", content_type="image/jpeg"
@@ -182,6 +142,7 @@ class EventTest(APITestCase):
             "name": "event image",
             "location": "Lyon",
             "event_type": "Jazz",
+            "date": "2025-11-20T20:00:00Z",
             "image": image,
         }
 

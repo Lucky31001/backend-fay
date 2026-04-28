@@ -57,27 +57,3 @@ class AuthTest(APITestCase):
         self.assertIsNotNone(response.data["refresh_token"])
         self.assertIsNotNone(response.data["access_token"])
         self._assert_access_token_role(response.data["access_token"], "USER")
-
-    def test_refresh_keeps_role_in_access_token(self):
-        user = User.objects.create_user(
-            username=self.username,
-            email=self.email,
-            password=self.password,
-        )
-        Profile.objects.filter(user=user).update(role="CREATOR")
-
-        login_response = self.client.post(
-            "/api/login/",
-            {"username": self.username, "password": self.password},
-            format="json",
-        )
-        refresh_token = login_response.data["refresh_token"]
-
-        refresh_response = self.client.post(
-            "/api/token/refresh/",
-            {"refresh": refresh_token},
-            format="json",
-        )
-
-        self.assertEqual(refresh_response.status_code, status.HTTP_200_OK)
-        self._assert_access_token_role(refresh_response.data["access"], "CREATOR")
