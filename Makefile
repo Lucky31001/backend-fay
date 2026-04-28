@@ -1,8 +1,6 @@
 DOCKER ?= docker compose
 
 ifeq ($(OS),Windows_NT)
-    PY ?= py -3
-else
     PY ?= python3
 endif
 
