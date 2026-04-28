@@ -52,7 +52,7 @@ class EventTest(APITestCase):
             HTTP_AUTHORIZATION=f"Bearer {self.refresh.access_token}"
         )
 
-        response = self.client.post("/api/event/", data, format="json")
+        response = self.client.post("/api/event/", data, format="multipart")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["name"], data["name"])
@@ -71,7 +71,7 @@ class EventTest(APITestCase):
         data = {
             "name": "event dated",
             "location": "Paris",
-            "event_type": "Jazz",
+            "event_type": ["Jazz"],
             "date": event_date,
         }
 
@@ -79,7 +79,7 @@ class EventTest(APITestCase):
             HTTP_AUTHORIZATION=f"Bearer {self.refresh.access_token}"
         )
 
-        response = self.client.post("/api/event/", data, format="json")
+        response = self.client.post("/api/event/", data, format="multipart")
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(response.data["date"].startswith("2026-05-10T19:30:00"))
