@@ -6,7 +6,7 @@ from FAY.models.model_profile import Profile
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "role")
+    list_display = ("user", "role", "description")
     search_fields = ("user__username",)
 
 

@@ -19,8 +19,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
+
 from FAY.views.view_event import EventTypeView, EventView
 from FAY.views.view_login import LoginView
+from FAY.views.view_profile import ProfileView
 from FAY.views.view_register import RegisterView
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -31,6 +33,7 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/event/", EventView.as_view(), name="event"),
     path("api/event-types/", EventTypeView.as_view(), name="event_types"),
+    path("api/profile/", ProfileView.as_view(), name="profile"),
 ]
 
 if settings.DEBUG:

@@ -9,20 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from FAY.views.views import IsCreator
-
-
-def _extract_event_type_names(raw):
-    """ Handle une string ou une list de strings et retourne une liste de noms d'event types uniques """
-    if not raw:
-        return []
-    items = raw if isinstance(raw, (list, tuple)) else [raw]
-    seen = []
-    for item in items:
-        name = str(item.get("name", "") if isinstance(item, dict) else item).strip()
-        if name and name not in seen:
-            seen.append(name)
-    return seen
+from FAY.service.service_event_type import extract_event_type_names
 
 
 def _parse_event_date(raw):
@@ -70,7 +57,7 @@ class EventView(APIView):
 
     def post(self, request):
         data = request.data
-        event_type_names = _extract_event_type_names(
+        event_type_names = extract_event_type_names(
             data.getlist("event_type")
         )
 
