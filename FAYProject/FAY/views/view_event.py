@@ -71,7 +71,7 @@ class EventView(APIView):
     def post(self, request):
         data = request.data
         event_type_names = _extract_event_type_names(
-            data.get("event_type")
+            data.getlist("event_type")
         )
 
         if not data.get("name") or not data.get("location"):
