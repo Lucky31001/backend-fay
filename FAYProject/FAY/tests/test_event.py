@@ -100,6 +100,7 @@ class EventTest(APITestCase):
             description="",
             note=0,
             capacity=0,
+            date="2025-12-31T23:59:00Z",
         )
         jazz = EventType.objects.get_or_create(name="Jazz")[0]
         electro = EventType.objects.get_or_create(name="Electro")[0]
