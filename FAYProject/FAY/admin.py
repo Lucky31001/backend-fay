@@ -6,8 +6,12 @@ from FAY.models.model_profile import Profile
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "role", "description")
+    list_display = ("user", "name", "role", "description", "display_event_types")
     search_fields = ("user__username",)
+
+    @admin.display(description="Types")
+    def display_event_types(self, obj):
+        return ", ".join(obj.event_types.values_list("name", flat=True)) or "-"
 
 
 @admin.register(Event)

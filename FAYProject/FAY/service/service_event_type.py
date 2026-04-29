@@ -1,5 +1,5 @@
 def extract_event_type_names(raw):
-    """ Handle une string ou une list de strings et retourne une liste de noms d'event types uniques """
+    """Handle une string ou une list de strings et retourne une liste de noms d'event types uniques"""
     if not raw:
         return []
     items = raw if isinstance(raw, (list, tuple)) else [raw]
