@@ -4,35 +4,25 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from FAY.models.model_event import Event
 from FAY.models.model_event_type import EventType
+from FAY.service.service_event_type import extract_event_type_names
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from FAY.views.views import IsCreator
-
-
-def _extract_event_type_names(raw):
-    """ Handle une string ou une list de strings et retourne une liste de noms d'event types uniques """
-    if not raw:
-        return []
-    items = raw if isinstance(raw, (list, tuple)) else [raw]
-    seen = []
-    for item in items:
-        name = str(item.get("name", "") if isinstance(item, dict) else item).strip()
-        if name and name not in seen:
-            seen.append(name)
-    return seen
-
 
 def _parse_event_date(raw):
-    """ S'assurer d'avoir un datetime aware à partir d'une string ou d'un datetime, ou None si c'est invalide """
+    """S'assurer d'avoir un datetime aware à partir d'une string ou d'un datetime, ou None si c'est invalide"""
     if not raw:
         return None
     dt = raw if isinstance(raw, datetime) else parse_datetime(str(raw))
     if dt is None:
         return None
-    return dt if timezone.is_aware(dt) else timezone.make_aware(dt, timezone.get_current_timezone())
+    return (
+        dt
+        if timezone.is_aware(dt)
+        else timezone.make_aware(dt, timezone.get_current_timezone())
+    )
 
 
 def _attach_event_types(event, names):
@@ -41,7 +31,11 @@ def _attach_event_types(event, names):
 
 def _serialize_event(event, request=None):
     types = [et.name for et in event.event_types.all()]
-    image_url = request.build_absolute_uri(event.image.url) if event.image and request else (event.image.url if event.image else None)
+    image_url = (
+        request.build_absolute_uri(event.image.url)
+        if event.image and request
+        else (event.image.url if event.image else None)
+    )
 
     return {
         "id": event.id,
@@ -57,6 +51,7 @@ def _serialize_event(event, request=None):
         "capacity": event.capacity,
     }
 
+
 def _serialize_event_type(et):
     return {"id": et.id, "name": et.name}
 
@@ -70,9 +65,7 @@ class EventView(APIView):
 
     def post(self, request):
         data = request.data
-        event_type_names = _extract_event_type_names(
-            data.getlist("event_type")
-        )
+        event_type_names = extract_event_type_names(data.getlist("event_type"))
 
         if not data.get("name") or not data.get("location"):
             return Response(
@@ -89,7 +82,9 @@ class EventView(APIView):
         event_date = _parse_event_date(data.get("date"))
         if event_date is None:
             return Response(
-                {"error": "Format de date invalide. Utilise le format ISO 8601 (ex: 2026-05-10T19:30:00Z)."},
+                {
+                    "error": "Format de date invalide. Utilise le format ISO 8601 (ex: 2026-05-10T19:30:00Z)."
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -108,7 +103,11 @@ class EventView(APIView):
         _attach_event_types(event, event_type_names)
 
         return Response(
-            {"message": "Event créé", "event_id": event.id, **_serialize_event(event, request)},
+            {
+                "message": "Event créé",
+                "event_id": event.id,
+                **_serialize_event(event, request),
+            },
             status=status.HTTP_201_CREATED,
         )
 
@@ -117,4 +116,6 @@ class EventTypeView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return Response([_serialize_event_type(et) for et in EventType.objects.order_by("name")])
+        return Response(
+            [_serialize_event_type(et) for et in EventType.objects.order_by("name")]
+        )

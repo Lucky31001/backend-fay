@@ -13,8 +13,10 @@ class Profile(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, blank=True, null=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES)
     description = models.TextField(blank=True, default="")
+    image = models.ImageField(upload_to="profile/images/", blank=True, null=True)
     event_types = models.ManyToManyField(
         EventType, related_name="profile_events_type", blank=True
     )
