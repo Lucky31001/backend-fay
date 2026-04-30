@@ -65,7 +65,13 @@ class EventView(APIView):
 
     def post(self, request):
         data = request.data
-        event_type_names = extract_event_type_names(data.getlist("event_type"))
+        print("Received data:", data)
+        event_type_raw = (
+            data.getlist("event_type")
+            if hasattr(data, "getlist")
+            else data.get("event_type")
+        )
+        event_type_names = extract_event_type_names(event_type_raw)
 
         if not data.get("name") or not data.get("location"):
             return Response(

@@ -53,7 +53,12 @@ class ProfileView(APIView):
     def post(self, request):
         data = request.data
         print("Received data:", data)
-        event_type_names = extract_event_type_names(data.getlist("event_type"))
+        event_type_raw = (
+            data.getlist("event_type")
+            if hasattr(data, "getlist")
+            else data.get("event_type")
+        )
+        event_type_names = extract_event_type_names(event_type_raw)
 
         if not data.get("name"):
             return Response(

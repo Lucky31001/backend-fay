@@ -90,6 +90,33 @@ class EventTest(APITestCase):
             expected = timezone.make_aware(expected, timezone.get_current_timezone())
         self.assertEqual(event.date, expected)
 
+    def test_create_event_with_single_event_type_value(self):
+        data = {
+            "name": "soirée simple",
+            "location": "Paris",
+            "price": 10,
+            "link": "",
+            "description": "",
+            "event_type": "Fête",
+            "date": "2026-05-22T20:00:00Z",
+            "note": 4,
+            "capacity": 60,
+        }
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION=f"Bearer {self.refresh.access_token}"
+        )
+
+        response = self.client.post("/api/event/", data, format="json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["event_type"], ["Fête"])
+
+        event = Event.objects.get(id=response.data["event_id"])
+        self.assertEqual(
+            list(event.event_types.values_list("name", flat=True)), ["Fête"]
+        )
+
     def test_get_events_returns_all_types(self):
         event = Event.objects.create(
             creator=self.user,
