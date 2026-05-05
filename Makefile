@@ -32,6 +32,9 @@ run:
 	$(DJANGO) migrate
 	$(DJANGO) runserver 0.0.0.0:8000
 
+fixture:
+	$(DJANGO) create_sample_fixtures
+
 admin:
 	$(DJANGO) createsuperuser --noinput
 
